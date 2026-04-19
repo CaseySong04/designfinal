@@ -211,7 +211,7 @@ nav.dark a {
 /* ── EXHIBITIONS ── */
 .exh-scroll-container {
   position: relative;
-  height: 700vh;
+  height: 1000vh;
   background: #e8e4de;
   z-index: 50;
 }
