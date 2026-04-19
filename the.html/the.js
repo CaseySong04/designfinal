@@ -248,7 +248,13 @@ window.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  goToPrint(currentPrint - 1);
 });
 
+let wheelCooldown = false;
+
 printsTrack.addEventListener('wheel', e => {
+  if (wheelCooldown) return;
   if (e.deltaX > 30)       goToPrint(currentPrint + 1);
   else if (e.deltaX < -30) goToPrint(currentPrint - 1);
+  else return;
+  wheelCooldown = true;
+  setTimeout(() => { wheelCooldown = false; }, 600);
 });
