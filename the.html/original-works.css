@@ -72,6 +72,7 @@ nav a:hover {
 }
 
 .ow-hero-text {
+  
   padding-left: 3%;
   max-width: 380px;
   position: relative;
@@ -80,10 +81,12 @@ nav a:hover {
 }
 
 .ow-hero-text h1 {
+  padding-top: 80px;
+  margin-left: -20px;
   font-family: 'EB Garamond', serif;
   font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 400;
-  color: #1a2f5e;
+  color: #243f79;
   line-height: 1;
   margin-bottom: 2rem;
 }
