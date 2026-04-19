@@ -1,0 +1,147 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'EB Garamond', serif;
+  background: #e8e4de;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 24px 0;
+  background: rgba(232,228,222,0.95);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 100;
+  border-bottom: 0.5px solid rgba(26,47,94,0.15);
+}
+
+nav a {
+  color: #1a2f5e;
+  text-decoration: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  transition: color 0.4s ease;
+}
+
+nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ── HERO ── */
+.ow-hero {
+  display: flex;
+  align-items: flex-start;
+  background: #e8e4de;
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.ow-hero-circle {
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-left: -60px;
+  margin-bottom: -80px;
+  position: relative;
+  z-index: 1;
+}
+
+.ow-hero-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.ow-hero-text {
+  padding-left: 5%;
+  max-width: 380px;
+  position: relative;
+  z-index: 2;
+  padding-top: 80px;
+}
+
+.ow-hero-text h1 {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 400;
+  color: #1a2f5e;
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+.ow-hero-text p {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+/* ── GRID ── */
+.ow-grid {
+  padding: 80px 6%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ow-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.ow-item {
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+}
+
+.ow-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.ow-item:hover img {
+  transform: scale(1.03);
+}
+
+/* ── ROW SPECIFIC ── */
+.ow-row-4 .ow-item {
+  aspect-ratio: 1;
+}
+
+.ow-row-3-wide .ow-item {
+  aspect-ratio: 1;
+}
+
+.ow-row-3-wide .ow-wide {
+  flex: 1.8;
+  aspect-ratio: unset;
+  height: 400px;
+}
+
+/* ── CIRCLE ITEMS ── */
+.ow-item.ow-circle {
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
