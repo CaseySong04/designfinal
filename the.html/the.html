@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hong Seonghwa</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'EB Garamond', serif;
+      background: #0a1628;
+      overflow-x: hidden;
+      scrollbar-gutter: stable;
+    }
+
+    .hero { position: relative; width: 100%; height: 200vh; }
+
+    .hero-bg {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100vh;
+      background-image: url('serenity.jpg');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      z-index: 0;
+      transition: background-position 0.12s ease-out;
+    }
+
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background-color: rgba(0, 21, 62, 0.45);
+    }
+
+    nav {
+      position: fixed; top: 0; width: 100%;
+      display: flex; justify-content: center; gap: 60px;
+      padding: 24px 0; z-index: 100;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    nav a {
+      color: rgba(255,255,255,0.9); text-decoration: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300; letter-spacing: 0.05em;
+      transition: color 0.4s ease;
+    }
+
+    nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    nav.dark { background: rgba(240,237,232,0.88); backdrop-filter: blur(8px); }
+    nav.dark a { color: #1a2f5e; }
+
+    .hero-title {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 400; color: #ffffff;
+      text-align: center; letter-spacing: 0.01em; line-height: 1.1;
+      will-change: transform, opacity; white-space: nowrap;
+    }
+
+    .content-section {
+      position: relative; z-index: 50;
+      background: #f0ede8; min-height: 100vh;
+      margin-top: 100vh; padding: 80px 60px;
+      opacity: 0; transform: translateY(60px);
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+    }
+
+    .content-section.visible { transform: translateY(0); opacity: 1; }
+
+    .content-section h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 400;
+      color: #1a2f5e; border-bottom: 1px solid #1a2f5e;
+      padding-bottom: 16px; margin-bottom: 48px;
+    }
+
+    .main-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
+    .description { font-family: 'EB Garamond', serif; font-size: 1rem; line-height: 1.85; color: #2a2a2a; }
+    .gallery { display: flex; flex-direction: column; gap: 12px; }
+    .gallery-row-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .gallery-row-bottom { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: stretch; }
+    .gallery-stack { display: flex; flex-direction: column; gap: 12px; }
+    .gallery-item { overflow: hidden; opacity: 0; }
+    .gallery-item img { width: 100%; height: auto; display: block; transition: transform 0.5s ease; }
+    .gallery-item:hover img { transform: scale(1.03); }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .gallery-item.visible { animation: fadeIn 1.2s ease forwards; }
+
+    .view-all {
+      display: inline-block; margin-top: 40px;
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+      color: #1a2f5e; letter-spacing: 0.08em; text-decoration: none;
+      border-bottom: 1px solid #1a2f5e; padding-bottom: 2px;
+      transition: opacity 0.2s ease;
+    }
+    .view-all:hover { opacity: 0.5; }
+
+    /* ══ EXHIBITIONS ══ */
+    .exh-scroll-container {
+      position: relative; height: 350vh;
+      background: #e8e4de; z-index: 50;
+    }
+
+    .exh-sticky {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: visible;
+    }
+
+    .exh-section-label {
+      position: absolute;
+      top: calc(50% - 39vh - 36px);
+      left: 50%; transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #999;
+      opacity: 1; transition: opacity 0.3s ease;
+      white-space: nowrap; z-index: 5;
+    }
+
+    .exh-section-label.hidden { opacity: 0; }
+
+    .exh-panel-wrapper {
+      position: relative; width: 50%;
+      transform: translateX(30%);
+      will-change: width, transform;
+      display: flex; align-items: center;
+    }
+
+    .exh-panel {
+      position: relative; width: 100%; height: 78vh;
+      overflow: hidden; border-radius: 3px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+    }
+
+    .exh-track {
+      display: flex; width: 400%; height: 100%;
+      transition: transform 0.6s cubic-bezier(0.25,1,0.5,1);
+      will-change: transform;
+    }
+
+    .exh-slide {
+      min-width: 25%; height: 100%;
+      display: grid;
+      grid-template-columns: 280px 1fr 120px;
+      grid-template-rows: 1fr 1fr 1fr;
+      flex-shrink: 0;
+    }
+
+    .exh-slide-info {
+      grid-column: 1; grid-row: 1 / 4;
+      background: #e8e4de;
+      padding: 48px 32px;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 14px;
+      opacity: 0; transform: translateX(-16px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .exh-slide-info.show { opacity: 1; transform: translateX(0); }
+
+    .exh-slide-info .exh-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #999;
+    }
+
+    .exh-slide-info .exh-title {
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+      font-weight: 400; color: #1a2f5e; line-height: 1.15;
+    }
+
+    .exh-slide-info .exh-meta {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.88rem; color: #777; letter-spacing: 0.05em;
+    }
+
+    .exh-slide-info .exh-desc {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.93rem; line-height: 1.8; color: #333;
+    }
+
+    .exh-slide-info .exh-link {
+      display: inline-block; margin-top: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem; letter-spacing: 0.1em;
+      color: #1a2f5e; text-decoration: none;
+      border-bottom: 1px solid #1a2f5e; padding-bottom: 2px;
+      transition: opacity 0.2s; width: fit-content;
+    }
+
+    .exh-slide-info .exh-link:hover { opacity: 0.5; }
+
+    .exh-slide-main { grid-column: 2; grid-row: 1 / 4; overflow: hidden; }
+    .exh-slide-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .exh-slide-thumb { grid-column: 3; overflow: hidden; }
+    .exh-slide-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .exh-slide-thumb:hover img { transform: scale(1.05); }
+
+    .exh-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(26,47,94,0.12); backdrop-filter: blur(8px);
+      border: 1px solid rgba(26,47,94,0.25); color: #1a2f5e;
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; z-index: 30;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease, background 0.2s ease;
+    }
+
+    .exh-btn:hover { background: rgba(26,47,94,0.22); }
+    .exh-btn.prev { left: -64px; }
+    .exh-btn.next { right: -64px; }
+    .exh-btn.show { opacity: 1; pointer-events: all; }
+
+    .exh-dots {
+      position: absolute; bottom: -40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px;
+      opacity: 0; transition: opacity 0.4s ease; z-index: 20;
+    }
+
+    .exh-dots.show { opacity: 1; }
+
+    .exh-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(26,47,94,0.3); cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .exh-dot.active { background: #1a2f5e; transform: scale(1.4); }
+
+    /* ══════════════════════════════════════════
+       PRINTS SECTION
+    ══════════════════════════════════════════ */
+
+    .prints-scroll {
+      position: relative;
+      height: 700vh; /* extra height so print 1 has room before advancing */
+      z-index: 50;
+    }
+
+    .prints-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .prints-entry-gradient {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, #e8e4de 0%, #000 18%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── UPDATED: less blur, more brightness so backdrop is clearly visible ── */
+    .prints-bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      filter: blur(6px) brightness(0.5);
+      transform: scale(1.08);
+      z-index: 1;
+    }
+
+    .prints-bg-layer.active { opacity: 1; }
+
+    .prints-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.55) 0%,
+        rgba(0,0,0,0.25) 40%,
+        rgba(0,0,0,0.55) 100%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .prints-label {
+      position: absolute;
+      top: 48px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5);
+      z-index: 10;
+    }
+
+    .prints-carousel {
+      position: absolute;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      will-change: transform;
+    }
+
+    /* ── UPDATED: wider gap, more padding, cards centered ── */
+    .prints-track {
+      display: flex;
+      gap: 60px;
+      padding: 0 38vw;
+      transition: transform 0.7s cubic-bezier(0.25,1,0.5,1);
+      will-change: transform;
+    }
+
+    /* ── UPDATED: smaller cards ── */
+    .print-card {
+      flex-shrink: 0;
+      width: 22vw;
+      transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.5s ease;
+      cursor: pointer;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5);
+      opacity: 0.4;
+      transform: scale(0.88);
+    }
+
+    .print-card.active {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+
+    .print-card img {
+      width: 100%; height: auto;
+      display: block;
+      pointer-events: none;
+    }
+
+    .print-info {
+      position: absolute;
+      bottom: 60px; left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      white-space: nowrap;
+    }
+
+    .print-info.show { opacity: 1; }
+
+    .print-info h3 {
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 400; color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .print-info p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem; color: rgba(255,255,255,0.6);
+      letter-spacing: 0.1em;
+    }
+
+    .print-info a {
+      display: inline-block; margin-top: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem; letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.8); text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .print-info a:hover { color: #fff; border-color: #fff; }
+
+    .prints-dots {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10;
+    }
+
+    .prints-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .prints-dot.active { background: #fff; transform: scale(1.4); }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav">
+    <a href="original-works.html">Original Works</a>
+    <a href="exhibitions.html">Exhibitions</a>
+    <a href="prints.html">Prints</a>
+    <a href="profiles.html">Profiles</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <h1 class="hero-title" id="hero-title">Hong Seonghwa</h1>
+  </section>
+
+  <section class="content-section" id="content-section">
+    <h2>Original Works</h2>
+    <div class="main-layout">
+      <p class="description">
+        Hong Seonghwa captures the intricacies of the human spirit in her
+        paintings, while re-contextualising natural symbols like lotuses and
+        peonies for a contemporary world. Human emotion is central to her
+        works, and moments of joy, sorrow, or hardship are all explored as
+        reflections of the self.
+      </p>
+      <div class="gallery">
+        <div class="gallery-row-top">
+          <div class="gallery-item"><img src="serenity.jpg" alt="Work 1" /></div>
+          <div class="gallery-item"><img src="art2.jpg" alt="Work 2" /></div>
+          <div class="gallery-item"><img src="art3.jpg" alt="Work 3" /></div>
+        </div>
+        <div class="gallery-row-bottom">
+          <div class="gallery-item"><img src="art1.jpg" alt="Work 4" /></div>
+          <div class="gallery-stack">
+            <div class="gallery-item"><img src="art5.jpg" alt="Work 5" /></div>
+            <div class="gallery-item"><img src="art6.jpg" alt="Work 6" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="original-works.html" class="view-all">View All Original Works →</a>
+  </section>
+
+  <!-- ══ EXHIBITIONS CAROUSEL ══ -->
+  <div class="exh-scroll-container" id="exh-scroll">
+    <div class="exh-sticky">
+      <div class="exh-section-label" id="exh-label">Exhibitions</div>
+      <div class="exh-panel-wrapper" id="exh-panel-wrapper">
+        <button class="exh-btn prev" id="exh-prev">&#8592;</button>
+        <button class="exh-btn next" id="exh-next">&#8594;</button>
+        <div class="exh-dots" id="exh-dots"></div>
+        <div class="exh-panel" id="exh-panel">
+          <div class="exh-track" id="exh-track">
+
+            <div class="exh-slide">
+              <div class="exh-slide-info">
+                <span class="exh-label">Solo Exhibition</span>
+                <h2 class="exh-title">Serenity, a Time to Remain</h2>
+                <p class="exh-meta">Gallery COLLAST · Seoul, Korea</p>
+                <p class="exh-desc">Here, time suspends its horizontal flow and sinks into depth. Moving beyond artificial definitions, this exhibition becomes a serene first breath-inviting us to sense the true texture of existence, momentarily freed from the frantic pace of the world.</p>
+                <a class="exh-link" href="exhibitions.html">View Exhibition →</a>
+              </div>
+              <div class="exh-slide-main"><img src="exhibit1a.jpg" alt="Serenity main" /></div>
+              <div class="exh-slide-thumb"><img src="exhibit1b.jpg" alt="thumb 1" /></div>
+              <div class="exh-slide-thumb"><img src="art3.jpg" alt="thumb 2" /></div>
+              <div class="exh-slide-thumb"><img src="serenity.jpg" alt="thumb 3" /></div>
+            </div>
+
+            <div class="exh-slide">
+              <div class="exh-slide-info">
+                <span class="exh-label">Group Exhibition</span>
+                <h2 class="exh-title">Serenity in Bloom</h2>
+                <p class="exh-meta">Gallery M · Seoul, Korea</p>
+                <p class="exh-desc">This exhibition explores serene inner landscapes and the spiritual world, capturing the essence of human existence and fundamental questions of life on canvas.</p>
+                <a class="exh-link" href="exhibitions.html">View Exhibition →</a>
+              </div>
+              <div class="exh-slide-main"><img src="exhibit2a.jpg" alt="Bloom main" /></div>
+              <div class="exh-slide-thumb"><img src="exhibit2b.jpg" alt="thumb 1" /></div>
+              <div class="exh-slide-thumb"><img src="art5.jpg" alt="thumb 2" /></div>
+              <div class="exh-slide-thumb"><img src="art6.jpg" alt="thumb 3" /></div>
+            </div>
+
+            <div class="exh-slide">
+              <div class="exh-slide-info">
+                <span class="exh-label">Group Exhibition</span>
+                <h2 class="exh-title">Echoes</h2>
+                <p class="exh-meta">Galeria Azur · New York</p>
+                <p class="exh-desc">Every piece exhibited in our gallery is a tangible testament to how art can explore and express the complexities of the human soul, revealing intimate and universal narratives through forms and colors.</p>
+                <a class="exh-link" href="exhibitions.html">View Exhibition →</a>
+              </div>
+              <div class="exh-slide-main"><img src="exhibit3a.jpg" alt="Echoes main" /></div>
+              <div class="exh-slide-thumb"><img src="exhibit3b.jpg" alt="thumb 1" /></div>
+              <div class="exh-slide-thumb"><img src="art7.jpg" alt="thumb 2" /></div>
+              <div class="exh-slide-thumb"><img src="art8.jpg" alt="thumb 3" /></div>
+            </div>
+
+            <div class="exh-slide">
+              <div class="exh-slide-info">
+                <span class="exh-label">Group Exhibition</span>
+                <h2 class="exh-title">People.search.com</h2>
+                <p class="exh-meta">Suhin Gallery · Seoul, Korea</p>
+                <p class="exh-desc">From January 30 to March 9, Seoin Gallery will host People.search.com, which explores the differences between the human gaze looking at artworks and AI eyes trained through deep learning.</p>
+                <a class="exh-link" href="exhibitions.html">View Exhibition →</a>
+              </div>
+              <div class="exh-slide-main"><img src="exhibit4a.jpg" alt="People main" /></div>
+              <div class="exh-slide-thumb"><img src="exhibit4b.jpg" alt="thumb 1" /></div>
+              <div class="exh-slide-thumb"><img src="art9.jpg" alt="thumb 2" /></div>
+              <div class="exh-slide-thumb"><img src="art10.jpeg" alt="thumb 3" /></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PRINTS SECTION ══ -->
+  <div class="prints-scroll" id="prints-scroll">
+    <div class="prints-sticky" id="prints-sticky">
+
+      <div class="prints-entry-gradient" id="prints-gradient"></div>
+
+      <div class="prints-bg-layer active" id="prints-bg-0" style="background-image: url('print1.jpg')"></div>
+      <div class="prints-bg-layer" id="prints-bg-1" style="background-image: url('print2.jpg')"></div>
+      <div class="prints-bg-layer" id="prints-bg-2" style="background-image: url('print3.jpg')"></div>
+      <div class="prints-bg-layer" id="prints-bg-3" style="background-image: url('print4.jpg')"></div>
+      <div class="prints-bg-layer" id="prints-bg-4" style="background-image: url('print5.jpg')"></div>
+
+      <div class="prints-overlay"></div>
+
+      <div class="prints-label">Prints</div>
+
+      <div class="prints-carousel">
+        <div class="prints-track" id="prints-track">
+          <div class="print-card active" data-index="0"><img src="print1.jpg" alt="Print 1" /></div>
+          <div class="print-card" data-index="1"><img src="print2.jpg" alt="Print 2" /></div>
+          <div class="print-card" data-index="2"><img src="print3.jpg" alt="Print 3" /></div>
+          <div class="print-card" data-index="3"><img src="print4.jpg" alt="Print 4" /></div>
+          <div class="print-card" data-index="4"><img src="print5.jpg" alt="Print 5" /></div>
+        </div>
+      </div>
+
+      <div class="print-info show" id="print-info">
+        <h3 id="print-title">Print Title</h3>
+        <p id="print-meta">Edition · Year</p>
+        <a href="prints.html">View All Prints →</a>
+      </div>
+
+      <div class="prints-dots" id="prints-dots"></div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── HERO PARALLAX ── */
+    const heroBg    = document.getElementById('hero-bg');
+    const heroTitle = document.getElementById('hero-title');
+    const content   = document.getElementById('content-section');
+    const mainNav   = document.getElementById('main-nav');
+    const items     = document.querySelectorAll('.gallery-item');
+    const vh        = window.innerHeight;
+    const scatteredOrder = [0, 5, 1, 3, 2, 4];
+    let imagesAnimated = false;
+
+    function triggerImages() {
+      if (imagesAnimated) return;
+      imagesAnimated = true;
+      scatteredOrder.forEach((itemIndex, step) => {
+        setTimeout(() => {
+          if (items[itemIndex]) items[itemIndex].classList.add('visible');
+        }, 1500 + step * 500);
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      const scrollY  = window.scrollY;
+      const progress = Math.min(scrollY / vh, 1);
+
+      if (progress <= 0.60) {
+        const p = progress / 0.60;
+        heroTitle.style.transform        = `translate(-50%, calc(-50% + ${-p * 80}px))`;
+        heroTitle.style.opacity          = String(1 - p * 1.4);
+        heroBg.style.backgroundPosition = 'center top';
+      }
+
+      if (progress > 0.60) {
+        const p     = (progress - 0.60) / 0.40;
+        const eased = p * p * (3 - 2 * p);
+        heroTitle.style.opacity          = '0';
+        heroBg.style.backgroundPosition = `center ${eased * 50}%`;
+      }
+
+      if (progress >= 0.85) {
+        content.classList.add('visible');
+        mainNav.classList.add('dark');
+        triggerImages();
+      } else {
+        content.classList.remove('visible');
+        mainNav.classList.remove('dark');
+        imagesAnimated = false;
+        items.forEach(item => item.classList.remove('visible'));
+      }
+    });
+
+    /* ── EXHIBITIONS CAROUSEL ── */
+    const exhScroll   = document.getElementById('exh-scroll');
+    const exhWrapper  = document.getElementById('exh-panel-wrapper');
+    const exhTrack    = document.getElementById('exh-track');
+    const exhPrev     = document.getElementById('exh-prev');
+    const exhNext     = document.getElementById('exh-next');
+    const exhDotsEl   = document.getElementById('exh-dots');
+    const exhLabelEl  = document.getElementById('exh-label');
+    const exhSlides   = document.querySelectorAll('.exh-slide');
+    const exhInfos    = document.querySelectorAll('.exh-slide-info');
+    const totalExh    = exhSlides.length;
+    let currentExh    = 0;
+    let exhExpanded   = false;
+
+    exhSlides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.classList.add('exh-dot');
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => goExh(i));
+      exhDotsEl.appendChild(d);
+    });
+
+    const exhDots = document.querySelectorAll('.exh-dot');
+
+    function updateExhDots() {
+      exhDots.forEach((d, i) => d.classList.toggle('active', i === currentExh));
+    }
+
+    function goExh(index) {
+      currentExh = Math.max(0, Math.min(index, totalExh - 1));
+      exhTrack.style.transition = 'transform 0.6s cubic-bezier(0.25,1,0.5,1)';
+      exhTrack.style.transform  = `translateX(${-currentExh * 25}%)`;
+      updateExhDots();
+    }
+
+    exhPrev.addEventListener('click', () => goExh(currentExh - 1));
+    exhNext.addEventListener('click', () => goExh(currentExh + 1));
+
+    let exhDragStart = 0, exhDragging = false;
+    exhTrack.addEventListener('mousedown', e => { exhDragging = true; exhDragStart = e.clientX; exhTrack.style.transition = 'none'; });
+    window.addEventListener('mousemove', e => { if (!exhDragging) return; exhTrack.style.transform = `translateX(calc(${-currentExh * 25}% + ${e.clientX - exhDragStart}px))`; });
+    window.addEventListener('mouseup', e => {
+      if (!exhDragging) return; exhDragging = false;
+      const diff = e.clientX - exhDragStart;
+      if (diff < -60) goExh(currentExh + 1); else if (diff > 60) goExh(currentExh - 1); else goExh(currentExh);
+    });
+    exhTrack.addEventListener('touchstart', e => { exhDragStart = e.touches[0].clientX; exhTrack.style.transition = 'none'; });
+    exhTrack.addEventListener('touchmove',  e => { exhTrack.style.transform = `translateX(calc(${-currentExh * 25}% + ${e.touches[0].clientX - exhDragStart}px))`; });
+    exhTrack.addEventListener('touchend',   e => {
+      exhTrack.style.transition = 'transform 0.6s cubic-bezier(0.25,1,0.5,1)';
+      const diff = e.changedTouches[0].clientX - exhDragStart;
+      if (diff < -60) goExh(currentExh + 1); else if (diff > 60) goExh(currentExh - 1); else goExh(currentExh);
+    });
+
+    window.addEventListener('scroll', () => {
+      const rect     = exhScroll.getBoundingClientRect();
+      const total    = exhScroll.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(scrolled / total, 1));
+      const eased    = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      exhWrapper.style.width     = `${50 + eased * 38}%`;
+      exhWrapper.style.transform = `translateX(${30 - eased * 30}%)`;
+
+      const expanded = progress > 0.72;
+      if (expanded !== exhExpanded) {
+        exhExpanded = expanded;
+        exhInfos.forEach(info => info.classList.toggle('show', expanded));
+        exhPrev.classList.toggle('show', expanded);
+        exhNext.classList.toggle('show', expanded);
+        exhDotsEl.classList.toggle('show', expanded);
+        exhLabelEl.classList.toggle('hidden', expanded);
+      }
+    });
+
+    /* ══ PRINTS SCROLL-HIJACK ══ */
+    const printsData = [
+      { title: 'Serenity_27(평온_27)',      meta: 'Limited Edition Print· €125' },
+      { title: 'Serenity_11(평온_11)',     meta: 'Limited Edition of 100· €125' },
+      { title: 'Serenity_3 (평온_3)', meta: 'Limited Edition of 100 · €125' },
+      { title: 'Serenity_12',         meta: 'Limited Edition Print · £102' },
+      { title: 'A Series of Tranquility',    meta: 'Limited Edition Print · Sold Out' },
+    ];
+
+    const printsScroll = document.getElementById('prints-scroll');
+    const printsTrack  = document.getElementById('prints-track');
+    const printTitleEl = document.getElementById('print-title');
+    const printMetaEl  = document.getElementById('print-meta');
+    const printDotsEl  = document.getElementById('prints-dots');
+    const printBgs     = document.querySelectorAll('.prints-bg-layer');
+    const printCards   = document.querySelectorAll('.print-card');
+    const gradientEl   = document.getElementById('prints-gradient');
+    const totalPrints  = printsData.length;
+    let currentPrint   = 0;
+
+    printsData.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.classList.add('prints-dot');
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => goToPrint(i));
+      printDotsEl.appendChild(d);
+    });
+
+    const printDots = document.querySelectorAll('.prints-dot');
+
+    function updatePrintDots() {
+      printDots.forEach((d, i) => d.classList.toggle('active', i === currentPrint));
+    }
+
+    function goToPrint(index) {
+      currentPrint = Math.max(0, Math.min(index, totalPrints - 1));
+      const cardW  = printsTrack.children[0].offsetWidth;
+      const gap    = 60; /* matches updated CSS gap */
+      printsTrack.style.transform = `translateX(${-currentPrint * (cardW + gap)}px)`;
+      printCards.forEach((c, i) => c.classList.toggle('active', i === currentPrint));
+      printBgs.forEach((b, i)   => b.classList.toggle('active', i === currentPrint));
+      printTitleEl.textContent = printsData[currentPrint].title;
+      printMetaEl.textContent  = printsData[currentPrint].meta;
+      updatePrintDots();
+    }
+
+    printTitleEl.textContent = printsData[0].title;
+    printMetaEl.textContent  = printsData[0].meta;
+
+    window.addEventListener('scroll', () => {
+      const rect     = printsScroll.getBoundingClientRect();
+      const total    = printsScroll.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(scrolled / total, 1));
+
+      if (scrolled < 0) return;
+
+      // Fade out gradient
+      gradientEl.style.opacity = String(Math.max(0, 1 - progress * 8));
+
+      // First 15% of scroll = stay on print 1, then advance through the rest
+      const raw   = Math.max(0, (progress - 0.15) / 0.85) * (totalPrints - 1);
+      const index = Math.round(raw);
+
+      if (index !== currentPrint) goToPrint(index);
+    });
+  </script>
+
+</body>
+</html>
