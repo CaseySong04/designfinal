@@ -248,3 +248,7 @@ window.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  goToPrint(currentPrint - 1);
 });
 
+printsTrack.addEventListener('wheel', e => {
+  if (e.deltaX > 30)       goToPrint(currentPrint + 1);
+  else if (e.deltaX < -30) goToPrint(currentPrint - 1);
+});
