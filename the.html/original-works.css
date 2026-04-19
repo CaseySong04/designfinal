@@ -6,7 +6,7 @@
 
 body {
   font-family: 'EB Garamond', serif;
-  background: #e8e4de;
+  background: #f2eee9;
   overflow-x: hidden;
 }
 
@@ -17,7 +17,7 @@ nav {
   justify-content: center;
   gap: 60px;
   padding: 24px 0;
-  background: #d6d4cf;
+  background:#c8c6c1;
   backdrop-filter: blur(8px);
   position: relative;
   z-index: 100;
@@ -43,7 +43,7 @@ nav a:hover {
 .ow-hero {
   display: flex;
   align-items: flex-start;
-  background: #d6d4cf;
+  background: #c8c6c1;
   position: relative;
   height: 500px;
   overflow: hidden;
