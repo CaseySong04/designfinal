@@ -424,10 +424,10 @@ nav.dark a {
   transform: scale(1.4);
 }
 
-/* ── PRINTS ── */
+/* PRINT SECTION */
 .prints-scroll {
   position: relative;
-  height: 700vh;
+  height: 100vh;
   z-index: 50;
 }
 
@@ -499,16 +499,20 @@ nav.dark a {
   z-index: 10;
   display: flex;
   align-items: center;
-  will-change: transform;
+  overflow:hidden;
 }
 
 .prints-track {
   display: flex;
   gap: 60px;
   padding: 0 38vw;
+  cursor:grab;
+  user-select: none;
   transition: transform 0.7s cubic-bezier(0.25,1,0.5,1);
   will-change: transform;
 }
+
+.prints-track:active{cursor:grabbing}
 
 .print-card {
   flex-shrink: 0;
