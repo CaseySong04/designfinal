@@ -157,7 +157,7 @@ const printsData = [
   { title: 'A Series of Tranquility',  meta: 'Limited Edition Print · Sold Out' },
 ];
 
-const printsScroll = document.getElementById('prints-scroll');
+
 const printsTrack  = document.getElementById('prints-track');
 const printTitleEl = document.getElementById('print-title');
 const printMetaEl  = document.getElementById('print-meta');
@@ -197,18 +197,54 @@ function goToPrint(index) {
 printTitleEl.textContent = printsData[0].title;
 printMetaEl.textContent  = printsData[0].meta;
 
-window.addEventListener('scroll', () => {
-  const rect     = printsScroll.getBoundingClientRect();
-  const total    = printsScroll.offsetHeight - window.innerHeight;
-  const scrolled = -rect.top;
-  const progress = Math.max(0, Math.min(scrolled / total, 1));
+/*dragging print*/ 
+/* ── DRAG ── */
+let dragStart = 0, dragging = false;
 
-  if (scrolled < 0) return;
-
-  gradientEl.style.opacity = String(Math.max(0, 1 - progress * 8));
-
-  const raw   = Math.max(0, (progress - 0.15) / 0.85) * (totalPrints - 1);
-  const index = Math.round(raw);
-
-  if (index !== currentPrint) goToPrint(index);
+printsTrack.addEventListener('mousedown', e => {
+  dragging  = true;
+  dragStart = e.clientX;
+  printsTrack.style.transition = 'none';
 });
+
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const cardW = printsTrack.children[0].offsetWidth;
+  printsTrack.style.transform = `translateX(${-currentPrint * (cardW + 60) + (e.clientX - dragStart)}px)`;
+});
+
+window.addEventListener('mouseup', e => {
+  if (!dragging) return;
+  dragging = false;
+  printsTrack.style.transition = 'transform 0.5s cubic-bezier(0.25,1,0.5,1)';
+  const diff = e.clientX - dragStart;
+  if (diff < -60) goToPrint(currentPrint + 1);
+  else if (diff > 60) goToPrint(currentPrint - 1);
+  else goToPrint(currentPrint);
+});
+
+/* ── TOUCH ── */
+printsTrack.addEventListener('touchstart', e => {
+  dragStart = e.touches[0].clientX;
+  printsTrack.style.transition = 'none';
+});
+
+printsTrack.addEventListener('touchmove', e => {
+  const cardW = printsTrack.children[0].offsetWidth;
+  printsTrack.style.transform = `translateX(${-currentPrint * (cardW + 60) + (e.touches[0].clientX - dragStart)}px)`;
+});
+
+printsTrack.addEventListener('touchend', e => {
+  printsTrack.style.transition = 'transform 0.5s cubic-bezier(0.25,1,0.5,1)';
+  const diff = e.changedTouches[0].clientX - dragStart;
+  if (diff < -60) goToPrint(currentPrint + 1);
+  else if (diff > 60) goToPrint(currentPrint - 1);
+  else goToPrint(currentPrint);
+});
+
+/* ── KEYBOARD ── */
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goToPrint(currentPrint + 1);
+  if (e.key === 'ArrowLeft')  goToPrint(currentPrint - 1);
+});
+
