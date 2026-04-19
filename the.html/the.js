@@ -137,7 +137,7 @@ window.addEventListener('scroll', () => {
   exhWrapper.style.width     = `${50 + eased * 38}%`;
   exhWrapper.style.transform = `translateX(${30 - eased * 30}%)`;
 
-  const expanded = progress > 0.55;
+  const expanded = progress > 0.45;
   if (expanded !== exhExpanded) {
     exhExpanded = expanded;
     exhInfos.forEach(info => info.classList.toggle('show', expanded));
@@ -145,6 +145,8 @@ window.addEventListener('scroll', () => {
     exhNext.classList.toggle('show', expanded);
     exhDotsEl.classList.toggle('show', expanded);
     exhLabelEl.classList.toggle('hidden', expanded);
+
+    
   }
 });
 
