@@ -9,6 +9,13 @@ body {
   background: #f2eee9;
   overflow-x: hidden;
 }
+.site-footer {
+  width: 100%;
+}
+.site-footer img {
+  width: 100%;
+  display: block;
+}
 
 /* ── NAV ── */
 nav {
