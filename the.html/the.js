@@ -260,3 +260,9 @@ printsTrack.addEventListener('wheel', e => {
   wheelCooldown = true;
   setTimeout(() => { wheelCooldown = false; }, 600);
 });
+
+/*home utton icon*/
+document.getElementById('nav-home').addEventListener('click', e => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});

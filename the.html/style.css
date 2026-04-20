@@ -56,8 +56,8 @@ nav.dark a {
 }
 
 .nav-home img {
-  width: 28px;
-  height: 28px;
+  width: 35px;
+  height: 35px;
   object-fit: contain;
   opacity: 0.8;
   transition: opacity 0.3s ease;
