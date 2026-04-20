@@ -18,12 +18,15 @@ nav {
   gap: 60px;
   padding: 24px 0;
   background:#c8c6c1;
+  transition: opacity 0.4s ease;;
   backdrop-filter: blur(8px);
-  position: relative;
+  position: fixed;
   z-index: 100;
   border-bottom: 0.5px solid rgba(26,47,94,0.15);
 }
-
+nav.scrolled {
+  opacity: 0.5;
+}
 nav a {
   color: #1a2f5e;
   text-decoration: none;
