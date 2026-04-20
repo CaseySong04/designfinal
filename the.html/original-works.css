@@ -50,7 +50,7 @@ nav a:hover {
   width: 35px;
   height: 35px;
   object-fit: contain;
-  opacity: 0.8;
+  opacity: 0.5;
   transition: opacity 0.3s ease;
 }
 
