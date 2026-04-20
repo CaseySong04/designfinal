@@ -39,6 +39,25 @@ nav a:hover {
   text-underline-offset: 4px;
 }
 
+.nav-home {
+  position: absolute;
+  left: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-home img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.nav-home:hover img {
+  opacity: 1;
+}
+
 /* ── HERO ── */
 .ow-hero {
   display: flex;
