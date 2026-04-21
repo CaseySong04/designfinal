@@ -4,12 +4,16 @@
   box-sizing: border-box;
 }
 
-body {
+
+ body {
   font-family: 'EB Garamond', serif;
   background: #f2eee9;
   overflow-x: hidden;
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+
 
 /* ── NAV ── */
 nav {
@@ -124,7 +128,8 @@ nav a:hover {
 
 /* ── GRID ── */
 .ow-grid {
-  padding: 80px 6%;
+ 
+  padding: 120px 6% 80px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -156,13 +161,14 @@ nav a:hover {
 
 /* ── ROW SPECIFIC ── */
 .ow-row-4 .ow-item {
-  aspect-ratio: 1;
+  height: 380px;
+  aspect-ratio: unset;
 }
 
 .ow-row-3-wide .ow-item {
-  aspect-ratio: 1;
+  height: 380px;
+  aspect-ratio: unset;
 }
-
 .ow-row-3-wide .ow-wide {
   flex: 1.8;
   aspect-ratio: unset;
@@ -181,4 +187,9 @@ nav a:hover {
 .site-footer img {
   width: 100%;
   display: block;
+  
+}
+.site-footer {
+  width: 100%;
+  margin-top: auto;
 }
