@@ -10,13 +10,7 @@ body {
   overflow-x: hidden;
   scrollbar-gutter: stable;
 }
-.site-footer {
-  width: 100%;
-}
-.site-footer img {
-  width: 100%;
-  display: block;
-}
+
 
 /* ── NAV ── */
 nav {
@@ -639,4 +633,15 @@ nav.dark .nav-home img {
 .prints-dot.active {
   background: #fff;
   transform: scale(1.4);
+}
+
+.site-footer {
+  width: 100%;
+  position: relative;
+  z-index: 60;
+}
+
+.site-footer img {
+  width: 100%;
+  display: block;
 }
